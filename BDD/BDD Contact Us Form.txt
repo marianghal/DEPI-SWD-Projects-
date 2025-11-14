@@ -1,0 +1,149 @@
+Feature: Contact Us Form Functionality
+  As a website user
+  I want to interact with the Contact Us page
+  So that I can communicate with the business and get support
+
+  Background:
+    Given I am on the Contact Us page
+
+  @TC-CONTACT-001
+  Scenario: Verify successful form submission with valid data
+    When I enter name "Ahmed Qatar"
+    And I enter email "ahmedqattar@outlook.com"
+    And I enter subject "Test Subject"
+    And I type message "This is a test"
+    And I upload file "test.txt"
+    And I click Submit button
+    Then I should see success message "Success! Your details have been submitted successfully."
+
+  @TC-CONTACT-002
+  Scenario: Verify form validation for empty email field
+    When I fill all fields except email
+    And I leave email blank
+    And I click Submit button
+    Then I should see error message near email field
+    And the form should not submit
+
+  @TC-CONTACT-003
+  Scenario: Verify file upload functionality with image
+    When I enter name "Ahmed Qatar"
+    And I enter email "ahmedqattar@outlook.com"
+    And I enter subject "Test Subject"
+    And I type message "Test message"
+    And I upload image file "photo.jpg"
+    And I click Submit button
+    Then the file should be attached
+    And the form should submit successfully with image included
+
+  @TC-CONTACT-004
+  Scenario: Verify form validation when only email field is filled
+    When I leave name field blank
+    And I enter email "ahmedqattar@outlook.com"
+    And I leave subject field blank
+    And I leave message field blank
+    And I do not upload any file
+    And I click Submit button
+    Then the form should not submit
+    And I should see validation errors for mandatory fields
+
+  @TC-CONTACT-006
+  Scenario: Verify form validation with invalid email format
+    When I enter name "Test User"
+    And I enter invalid email "invalid-email"
+    And I enter subject "Test Subject"
+    And I type message "Test message"
+    And I click Submit button
+    Then the form should not submit
+    And I should see error message for invalid email format
+
+  @TC-CONTACT-007
+  Scenario: Verify feedback email link functionality
+    When I locate feedback email address
+    And I click on email link "feedback@automationexercise.com"
+    Then my default email client should open
+    And the "To:" field should be pre-filled with "feedback@automationexercise.com"
+
+  @TC-CONTACT-008
+  Scenario: Verify home navigation after successful submission
+    Given I have successfully submitted the contact form
+    When I click the home link
+    Then I should be navigated to the website homepage
+
+  @TC-CONTACT-009
+  Scenario: Verify upload of different file types
+    When I fill all required fields with valid data
+    And I upload Excel file "document.xlsx"
+    And I click Submit button
+    Then the form should accept and submit with XLSX file
+
+    When I fill all required fields with valid data
+    And I upload video file "1min_video.mp4"
+    And I click Submit button
+    Then the form should accept and submit with MP4 file
+
+    When I fill all required fields with valid data
+    And I upload image file "image.png"
+    And I click Submit button
+    Then the form should accept and submit with PNG file
+
+  @TC-CONTACT-010
+  Scenario: Verify file size limit validation
+    When I fill all required fields with valid data
+    And I upload large file "large_video.mp4" (15MB)
+    And I click Submit button
+    Then I should see error message for file size limit exceeded
+
+  @TC-CONTACT-011
+  Scenario: Verify email validation rejects weak patterns
+    When I enter name "Test User"
+    And I enter invalid email pattern "a@com"
+    And I enter subject "Test Subject"
+    And I type message "Test message"
+    And I click Submit button
+    Then the form should not submit
+    And I should see email validation error
+
+    When I enter name "Test User"
+    And I enter invalid email pattern "0@0"
+    And I enter subject "Test Subject"
+    And I type message "Test message"
+    And I click Submit button
+    Then the form should not submit
+    And I should see email validation error
+
+  @TC-CONTACT-012
+  Scenario: Verify auto-reply email is sent after form submission
+    Given I have submitted the contact form with a valid email address
+    When I check my email inbox
+    Then I should receive an auto-reply confirmation email
+
+  @TC-CONTACT-013
+  Scenario: Verify detailed confirmation message after submission
+    When I submit the contact form successfully
+    Then I should see detailed confirmation message "Thank you! We received your message and will respond within 24 hours."
+
+  @TC-CONTACT-014
+  Scenario: Verify customer service phone number is displayed
+    When I check for customer service phone number on the page
+    Then a customer service phone number should be visible
+    And it should be clickable on mobile devices
+
+  @TC-CONTACT-015
+  Scenario: Verify social media links are available
+    When I check for social media icons and links on the page
+    Then Facebook social media link should be present and functional
+    And LinkedIn social media link should be present and functional
+    And Instagram social media link should be present and functional
+    And Twitter social media link should be present and functional
+
+  @TC-CONTACT-016
+  Scenario: Verify physical business address is displayed
+    When I check for business address on the page
+    Then a physical business address should be visible
+    And it should be clickable for maps integration
+
+  @TC-CONTACT-017
+  Scenario: Verify live chat availability
+    When I check for live chat widget or button on the page
+    Then a live chat option should be available during business hours
+    And it should open chat interface when clicked
